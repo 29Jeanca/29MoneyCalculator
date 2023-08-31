@@ -1,0 +1,43 @@
+﻿@page "/createaccount"
+<style>
+    h1
+    {
+        text-align:center;
+        font-size:30px;
+    }
+    .btn-crear
+    {
+        background-color: #00913f;
+    }
+</style>
+<h1>Create your new account</h1>
+
+<form>
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input placeholder="Email"
+               type="email"
+               class="form-control"
+               id="exampleInputEmail1"
+               aria-describedby="emailHelp" />
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input placeholder="Password"
+               type="password"
+               class="form-control"
+               id="exampleInputPassword1" />
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">29</span>
+        </div>
+        <input type="text" class="form-control" placeholder="User name">
+    </div>
+
+
+    <button type="submit" class="btn btn-primary btn-crear">Create account</button>
+</form>
+@code {
+
+}

@@ -1,0 +1,96 @@
+﻿@page "/"
+<style>
+    body
+    {
+        box-sizing:border-box;
+        margin:0;
+        padding:0;
+    }
+
+    .main-content {
+        display: flex;
+        text-align:center;
+        flex-direction: column;
+        min-height: 100vh;
+        align-content: center;
+        justify-content: center;
+        margin-top: -110px;
+    }
+    h1 {
+        color: #000;
+        text-align: center;
+        font-size: 40px;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    a {
+        color: #1919e6;
+        text-decoration: none;
+    }
+
+    .enlaces {
+        display: block;
+        margin-top: 30px;
+    }
+
+    .btnLogin {
+        background-color: #008f9c;
+        width: 340px;
+        margin-top: 30px;
+        border-color: transparent;
+        border-radius: 20px;
+        color: #fff;
+    }
+    .inputs
+    {
+        border-radius:20px;
+    }
+  
+</style>
+
+
+@code {
+    private string GetDate()
+    {
+        DateTime date = DateTime.Now;
+        int day;
+        int month;
+        int year;
+
+        day = date.Day;
+        month = date.Month;
+        year = date.Year;
+        string fullDate = $"{day}/{month}/{year}";
+        return fullDate;
+    }
+    
+}
+<p>@GetDate()</p>
+<h1>Welcome!</h1>
+
+<div class="main-content">
+<form>
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input type="email"
+               class="form-control inputs"
+               id="exampleInputEmail1"
+               placeholder="Email address"
+               aria-describedby="emailHelp" />
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password"
+               class="form-control inputs"
+               id="exampleInputPassword1"
+               placeholder="Password"/>
+    </div>
+    <div class="enlaces">
+        <a href="/recoverpassword">Did you forget your password?</a>
+    </div>
+    <div class="enlaces">
+        <a href="/createaccount">Not account? Create one here</a>
+    </div>
+    <button type="submit" class="btnLogin">Login</button>
+</form>
+</div>
