@@ -18,6 +18,7 @@
     }
     h1 {
         color: #000;
+        vertical-align:top;
         text-align: center;
         font-size: 40px;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -44,8 +45,14 @@
     .inputs
     {
         border-radius:20px;
+        border: solid 3px;
     }
-  
+    .imagen
+    {
+        height:250px;
+        width:100%;
+    }
+
 </style>
 
 
@@ -63,7 +70,6 @@
         string fullDate = $"{day}/{month}/{year}";
         return fullDate;
     }
-    
 }
 <p>@GetDate()</p>
 <h1>Welcome!</h1>
@@ -78,13 +84,16 @@
                placeholder="Email address"
                aria-describedby="emailHelp" />
     </div>
-    <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password"
-               class="form-control inputs"
-               id="exampleInputPassword1"
-               placeholder="Password"/>
-    </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-group">
+                <input type="password" id="password" class="form-control inputs" placeholder="Enter your password">
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
     <div class="enlaces">
         <a href="/recoverpassword">Did you forget your password?</a>
     </div>
@@ -94,3 +103,14 @@
     <button type="submit" class="btnLogin">Login</button>
 </form>
 </div>
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+</script>
