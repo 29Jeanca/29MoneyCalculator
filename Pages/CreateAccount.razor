@@ -1,4 +1,7 @@
 ﻿@page "/createaccount"
+@using System.Security;
+@using _29MoneyCalculator.Clases;
+@using _29MoneyCalculator.Controladores;
 <style>
     h1
     {
@@ -29,6 +32,7 @@
         <label for="exampleInputEmail1" class="form-label">Email address</label>
         <input placeholder="Email"
                type="email"
+               @bind="@user_email"
                class="form-control inputs"
                id="exampleInputEmail1"
                aria-describedby="emailHelp" />
@@ -36,7 +40,11 @@
     <div class="form-group">
         <label for="password">Password</label>
         <div class="input-group">
-            <input type="password" id="password" class="form-control inputs" placeholder="Password">
+            <input type="password" 
+                @* @bind="@user_password" *@
+                id="password" 
+                class="form-control inputs" 
+                placeholder="Password">
             <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                 <i class="fa fa-eye" aria-hidden="true"></i>
             </button>
@@ -44,30 +52,33 @@
     </div>
     <div class="input-group mb-3" style="margin-top:20px;">
         <div class="input-group-prepend">
-            <span class="input-group-text">29</span>
+            <span class="input-group-text" style="height:50px;">29</span>
         </div>
-        <input type="text" class="form-control inputs" placeholder="User name">
+        <input type="text" class="form-control inputs" placeholder="User name" @bind="@user_name">
+    </div>
+    <div class="input-group mb-3" style="margin-top:20px;">
+        <input type="text" class="form-control inputs" placeholder="User last name (Optional)" @bind="@user_last_name">
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" value="Men" @onclick="() => SexoSeleccionado('M')" />
+        <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('M')" />
         <label class="form-check-label">
             Men
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" value="Women" @onclick="() => SexoSeleccionado('W')" />
+        <input class="form-check-input" type="radio" name="sexo" value="Women" @onclick="() => GenderSelected('W')" />
         <label class="form-check-label">
             Women
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" value="Other" @onclick="() => SexoSeleccionado('O')" />
+        <input class="form-check-input" type="radio" name="sexo" value="Other" @onclick="() => GenderSelected('O')" />
         <label class="form-check-label">
             Other
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" @onclick="() => SexoSeleccionado('N')" />
+        <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('N')" />
         <label class="form-check-label">
             Prefer not to say
         </label>
@@ -77,7 +88,8 @@
         <input placeholder="Fecha de nacimiento"
                type="date"
                class="form-control inputs"
-               id="fechaNacimiento" />
+               id="fechaNacimiento"
+               @bind="@user_birth"/>
     </div>
     <div class="input-group mb-3">
         <div class="custom-file">
@@ -86,16 +98,47 @@
         </div>
     </div>
     <div class="cont-btn">
-    <button type="button" class="btn btn-primary btn-crear">Create account</button>
+    <button type="button" class="btn btn-primary btn-crear" @onclick="AddUser">Create account</button>
     </div>
 </form>
 
 @code {
-    char selectedGender;
-  
-   private void SexoSeleccionado(char gender)
+    string user_email;
+    SecureString user_password;
+    string user_name;
+    string user_last_name;
+    char selected_gender;
+    DateTime user_birth;
+    public CreateAccount()
     {
-        selectedGender = gender;
+        userController = new UserController();
+    }
+    private UserController userController;
+
+    private void GenderSelected(char gender)
+    {
+        selected_gender = gender;
+    }
+    private void AddUser()
+    {
+        try{
+            string userPass = new System.Net.NetworkCredential(string.Empty, user_password).Password;
+            User user = new User()
+        {
+            User_Email = user_email,
+            User_Password = userPass,
+            User_Name = user_name,
+            User_last_name = user_last_name,
+            User_Gender = selected_gender,
+            User_Birth = user_birth
+
+        };
+            userController.CreateUser(user);
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e.ToString());
+        }
     }
 
 }
