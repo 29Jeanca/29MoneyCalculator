@@ -27,7 +27,7 @@ namespace _29_Money_Calculator.BD
             catch (NpgsqlException e)
             {
                 Console.WriteLine("No se pudo conectar a la base de datos de PostgreSQL, error: " + e.ToString());
-
+                Console.WriteLine($"Excepción PostgreSQL: {e.Message}");
             }
 
             return conexion;
@@ -44,7 +44,7 @@ namespace _29_Money_Calculator.BD
             catch (NpgsqlException e)
             {
                 Console.WriteLine("No se pudo cerrar la conexion a la base de datos de PostgreSQL, error: " + e.ToString());
-
+                Console.WriteLine($"Excepción PostgreSQL: {e.Message}");
             }
 
             return conexion;

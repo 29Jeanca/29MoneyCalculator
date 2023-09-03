@@ -38,6 +38,7 @@ namespace _29MoneyCalculator.Modelos
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine($"Excepción PostgreSQL: {ex.Message}");
             }
         }
         //public void CreateUser(User user)

@@ -24,25 +24,47 @@
         border-radius:20px;
         
     }
+    .alertas
+    {
+        font-family:'Lucida Sans',
+        'Lucida Sans Regular',
+        'Lucida Grande',
+        'Lucida Sans Unicode',
+        Geneva, Verdana, sans-serif;
+        border-radius:20px;
+        background-color: #ff0000;
+        color:#ffff;
+    }
+    .hidden
+    {
+        display:none;
+    }
+    .visible
+    {
+        display:block;
+    }
 </style>
 <h1>Create your new account</h1>
 
-<form>
+<form id="form" >
     <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <label for="Email" class="form-label">Email address</label>
         <input placeholder="Email"
                type="email"
                @bind="@user_email"
                class="form-control inputs"
-               id="exampleInputEmail1"
+               id="Email"
                aria-describedby="emailHelp" />
     </div>
+    <div class="alert alert-danger alertas hidden" role="alert" id="emailError">
+        The email address is incorrect. 😣
+    </div>
     <div class="form-group">
-        <label for="password">Password</label>
+        <label for="Password">Password</label>
         <div class="input-group">
             <input type="password" 
-                @* @bind="@user_password" *@
-                id="password" 
+                @bind="@user_password"
+                id="Password" 
                 class="form-control inputs" 
                 placeholder="Password">
             <button class="btn btn-outline-secondary" type="button" id="togglePassword">
@@ -50,14 +72,26 @@
             </button>
         </div>
     </div>
+    <div class="alert alert-danger alertas hidden" style="margin-top:10px;" role="alert" id="passwordError">
+        The password format
+        8-120 chars,no spaces,must contain at least one a-z char,must contain at least one A-Z char,must contain at least one digit,must contain at least one of the folowing chars:
+        !$%^&*()-=¡£_+`~./?;:'"|[]{}. 😣
+    </div>
     <div class="input-group mb-3" style="margin-top:20px;">
         <div class="input-group-prepend">
             <span class="input-group-text" style="height:50px;">29</span>
         </div>
-        <input type="text" class="form-control inputs" placeholder="User name" @bind="@user_name">
+        <input type="text" id="UserName" class="form-control inputs" placeholder="User name" @bind="@user_name" min="4">
+    </div>
+    <div class="alert alert-danger alertas hidden" role="alert" id="UserNameError">
+        The user's name must have a minimum of 4 characters and should not contain numbers, hyphens, or special characters. 😣
     </div>
     <div class="input-group mb-3" style="margin-top:20px;">
-        <input type="text" class="form-control inputs" placeholder="User last name (Optional)" @bind="@user_last_name">
+        <input type="text" id="UserLastName"
+               class="form-control inputs" placeholder="User last name" @bind="@user_last_name" min="4">
+    </div>
+    <div class="alert alert-danger alertas hidden" role="alert" id="UserLastNameError">
+        The user's last name must have a minimum of 4 characters and should not contain numbers, hyphens, or special characters. 😣
     </div>
     <div class="form-check">
         <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('M')" />
@@ -91,6 +125,9 @@
                id="fechaNacimiento"
                @bind="@user_birth"/>
     </div>
+    <div class="alert alert-danger alertas hidden" role="alert">
+        Select a date of birth
+    </div>
     <div class="input-group mb-3">
         <div class="custom-file">
             <input type="file" class="custom-file-input" id="inputGroupFile02">
@@ -98,13 +135,14 @@
         </div>
     </div>
     <div class="cont-btn">
-    <button type="button" class="btn btn-primary btn-crear" @onclick="AddUser">Create account</button>
+        <button type="button" id="submit" class="btn btn-primary btn-crear" onclick="onFormSubmit()">Validate registration</button>
+        <button type="button" id="sendForm" class="btn btn-primary hidden" @onclick="AddUser">Create Account</button>
     </div>
 </form>
 
 @code {
     string user_email;
-    SecureString user_password;
+    string user_password;
     string user_name;
     string user_last_name;
     char selected_gender;
@@ -121,12 +159,12 @@
     }
     private void AddUser()
     {
+        Console.WriteLine("entra");
         try{
-            string userPass = new System.Net.NetworkCredential(string.Empty, user_password).Password;
             User user = new User()
         {
             User_Email = user_email,
-            User_Password = userPass,
+            User_Password = user_password,
             User_Name = user_name,
             User_last_name = user_last_name,
             User_Gender = selected_gender,
@@ -142,3 +180,47 @@
     }
 
 }
+<script>
+    function onFormSubmit(event) {
+        const inputIds = ["Email", "Password", "UserName", "UserLastName"];
+        const regexPatterns = [/^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/,/^.*(?=.{8,120})(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\!\\#\$\%\^\&\*\(\)\-\=\¡\£\_\+\`\~\.\,\<\>\/\?\;\:\'\"\\\|\[\]\{\}]).*$/,/^[a-zA-Z]+$/,/^[a-zA-Z]+$/
+        ];
+        const errorIds = ["emailError", "passwordError", "UserNameError", "UserLastNameError"];
+        let hasError = false;
+
+        for (let i = 0; i < inputIds.length; i++) {
+            const inputId = inputIds[i];
+            const regexPattern = regexPatterns[i];
+            const errorId = errorIds[i];
+
+            const inputValue = document.getElementById(inputId).value.trim();
+
+            if (!regexPattern.test(inputValue)) {
+                document.getElementById(errorId).classList.remove("hidden");
+                document.getElementById(errorId).classList.add("visible");
+                hasError = true;
+            } else {
+                document.getElementById(errorId).classList.remove("visible");
+                document.getElementById(errorId).classList.add("hidden");
+            }
+        }
+
+        if (!hasError) {
+            document.getElementById("sendForm").classList.remove("hidden");
+            document.getElementById("sendForm").classList.add("visible");
+        }
+    }
+
+
+
+</script>
+
+@* - 8-120 chars
+- no spaces
+- must contain at least one a-z char
+- must contain at least one A-Z char
+- must contain at least one digit
+- must contain at least one of the folowing chars:
+!@#$%^&*()-=¡£_+`~.,<>/?;:'"|[]{} *@
+
+
