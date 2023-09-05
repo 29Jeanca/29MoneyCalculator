@@ -2,7 +2,7 @@
 
 namespace _29_Money_Calculator.BD
 {
-    public class ConxBD
+    public class ConxDB
     {
         NpgsqlConnection conexion = new NpgsqlConnection();
 
@@ -14,7 +14,7 @@ namespace _29_Money_Calculator.BD
 
         string urlConexion = "server=" + servidor + ";" + "port=" + puerto + ";" + "user id=" + usuario + ";" + "password=" + clave + ";" + "database=" + nombre_base_datos + ";";
 
-        public NpgsqlConnection EstablecerConexion()
+        public NpgsqlConnection Connect()
         {
 
             try
@@ -32,7 +32,7 @@ namespace _29_Money_Calculator.BD
 
             return conexion;
         }
-        public NpgsqlConnection CerrarConexion()
+        public NpgsqlConnection Disconnect()
         {
 
             try

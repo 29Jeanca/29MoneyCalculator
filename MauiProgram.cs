@@ -1,4 +1,6 @@
 ﻿using _29_Money_Calculator.BD;
+using _29MoneyCalculator.Class;
+using _29MoneyCalculator.Class.Interfaces;
 using _29MoneyCalculator.Data;
 using Microsoft.Extensions.Logging;
 
@@ -15,8 +17,9 @@ namespace _29MoneyCalculator
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
-            builder.Services.AddScoped<ConxBD>();
+            builder.Services.AddScoped<ConxDB>();
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSingleton<IDialogService,DialogService>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

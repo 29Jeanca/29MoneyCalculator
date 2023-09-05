@@ -17,9 +17,9 @@ namespace _29MoneyCalculator.Controladores
         {
             userModel = new UserModel();
         }
-        public void CreateUser(User user)
+        public bool CreateUser(User user)
         {
-            userModel.CreateUser(user);
+           return userModel.CreateUser(user);
         }
     }
 }

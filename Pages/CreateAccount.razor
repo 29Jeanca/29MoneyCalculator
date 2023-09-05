@@ -1,144 +1,151 @@
-﻿@page "/createaccount"
-@using System.Security;
-@using _29MoneyCalculator.Clases;
-@using _29MoneyCalculator.Controladores;
-<style>
-    h1
-    {
-        text-align: center;
-        font-size: 30px;
-    }
+﻿    @page "/createaccount"
+    @using System.Security;
+    @using System.Diagnostics;
+    @using _29MoneyCalculator.Clases;
+@using _29MoneyCalculator.Class.Interfaces;
+@using _29MoneyCalculator.Class;
+    @using _29MoneyCalculator.Controladores;
+    @using System;
+    @using Microsoft.Maui.Controls.Internals;
+    @using Microsoft.AspNetCore.Components.Routing;
+    @inject IDialogService DialogService;
+    <style>
+        h1
+        {
+            text-align: center;
+            font-size: 30px;
+        }
 
-    .btn-crear
-    {
-        background-color: #00913f;
-    }
-    .cont-btn
-    {
-        text-align:center;
-        margin-top:30px;
-    }
-    .inputs
-    {
-        border: solid 3px #dec783;
-        border-radius:20px;
+        .btn-crear
+        {
+            background-color: #00913f;
+        }
+        .cont-btn
+        {
+            text-align:center;
+            margin-top:30px;
+        }
+        .inputs
+        {
+            border: solid 3px #dec783;
+            border-radius:20px;
         
-    }
-    .alertas
-    {
-        font-family:'Lucida Sans',
-        'Lucida Sans Regular',
-        'Lucida Grande',
-        'Lucida Sans Unicode',
-        Geneva, Verdana, sans-serif;
-        border-radius:20px;
-        background-color: #ff0000;
-        color:#ffff;
-    }
-    .hidden
-    {
-        display:none;
-    }
-    .visible
-    {
-        display:block;
-    }
-</style>
-<h1>Create your new account</h1>
+        }
+        .alertas
+        {
+            font-family:'Lucida Sans',
+            'Lucida Sans Regular',
+            'Lucida Grande',
+            'Lucida Sans Unicode',
+            Geneva, Verdana, sans-serif;
+            border-radius:20px;
+            background-color: #ff0000;
+            color:#ffff;
+        }
+        .hidden
+        {
+            display:none;
+        }
+        .visible
+        {
+            display:block;
+        }
+    </style>
+    <h1>Create your new account</h1>
 
-<form id="form" >
-    <div class="mb-3">
-        <label for="Email" class="form-label">Email address</label>
-        <input placeholder="Email"
-               type="email"
-               @bind="@user_email"
-               class="form-control inputs"
-               id="Email"
-               aria-describedby="emailHelp" />
-    </div>
-    <div class="alert alert-danger alertas hidden" role="alert" id="emailError">
-        The email address is incorrect. 😣
-    </div>
-    <div class="form-group">
-        <label for="Password">Password</label>
-        <div class="input-group">
-            <input type="password" 
-                @bind="@user_password"
-                id="Password" 
-                class="form-control inputs" 
-                placeholder="Password">
-            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                <i class="fa fa-eye" aria-hidden="true"></i>
-            </button>
+    <form id="form" >
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email address</label>
+            <input placeholder="Email"
+                   type="email"
+                   @bind="@user_email"
+                   class="form-control inputs"
+                   id="Email"
+                   aria-describedby="emailHelp" />
         </div>
-    </div>
-    <div class="alert alert-danger alertas hidden" style="margin-top:10px;" role="alert" id="passwordError">
-        The password format
-        8-120 chars,no spaces,must contain at least one a-z char,must contain at least one A-Z char,must contain at least one digit,must contain at least one of the folowing chars:
-        !$%^&*()-=¡£_+`~./?;:'"|[]{}. 😣
-    </div>
-    <div class="input-group mb-3" style="margin-top:20px;">
-        <div class="input-group-prepend">
-            <span class="input-group-text" style="height:50px;">29</span>
+        <div class="alert alert-danger alertas hidden" role="alert" id="emailError">
+            The email address is incorrect. 😣
         </div>
-        <input type="text" id="UserName" class="form-control inputs" placeholder="User name" @bind="@user_name" min="4">
-    </div>
-    <div class="alert alert-danger alertas hidden" role="alert" id="UserNameError">
-        The user's name must have a minimum of 4 characters and should not contain numbers, hyphens, or special characters. 😣
-    </div>
-    <div class="input-group mb-3" style="margin-top:20px;">
-        <input type="text" id="UserLastName"
-               class="form-control inputs" placeholder="User last name" @bind="@user_last_name" min="4">
-    </div>
-    <div class="alert alert-danger alertas hidden" role="alert" id="UserLastNameError">
-        The user's last name must have a minimum of 4 characters and should not contain numbers, hyphens, or special characters. 😣
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('M')" />
-        <label class="form-check-label">
-            Men
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" value="Women" @onclick="() => GenderSelected('W')" />
-        <label class="form-check-label">
-            Women
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" value="Other" @onclick="() => GenderSelected('O')" />
-        <label class="form-check-label">
-            Other
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('N')" />
-        <label class="form-check-label">
-            Prefer not to say
-        </label>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Date of birth</label>
-        <input placeholder="Fecha de nacimiento"
-               type="date"
-               class="form-control inputs"
-               id="fechaNacimiento"
-               @bind="@user_birth"/>
-    </div>
-    <div class="alert alert-danger alertas hidden" role="alert">
-        Select a date of birth
-    </div>
-    <div class="input-group mb-3">
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputGroupFile02">
-            <label class="custom-file-label" for="inputGroupFile02">Upload a profile image</label>
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <div class="input-group">
+                <input type="password" 
+                    @bind="@user_password"
+                    id="Password" 
+                    class="form-control inputs" 
+                    placeholder="Password">
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="cont-btn">
-        <button type="button" id="submit" class="btn btn-primary btn-crear" onclick="onFormSubmit()">Validate registration</button>
-        <button type="button" id="sendForm" class="btn btn-primary hidden" @onclick="AddUser">Create Account</button>
-    </div>
-</form>
+        <div class="alert alert-danger alertas hidden" style="margin-top:10px;" role="alert" id="passwordError">
+            The password format
+            8-120 chars,no spaces,must contain at least one a-z char,must contain at least one A-Z char,must contain at least one digit,must contain at least one of the folowing chars:
+            !$%^&*()-=¡£_+`~./?;:'"|[]{}. 😣
+        </div>
+        <div class="input-group mb-3" style="margin-top:20px;">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="height:50px;">29</span>
+            </div>
+            <input type="text" id="UserName" class="form-control inputs" placeholder="User name" @bind="@user_name" min="4">
+        </div>
+        <div class="alert alert-danger alertas hidden" role="alert" id="UserNameError">
+            The user's name must have a minimum of 4 characters and should not contain numbers, hyphens,spaces, or special characters. 😣
+        </div>
+        <div class="input-group mb-3" style="margin-top:20px;">
+            <input type="text" id="UserLastName"
+                   class="form-control inputs" placeholder="User last name" @bind="@user_last_name" min="4">
+        </div>
+        <div class="alert alert-danger alertas hidden" role="alert" id="UserLastNameError">
+        The user's last name must have a minimum of 4 characters and should not contain numbers, hyphens,spaces, or special characters. 😣
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('M')" />
+            <label class="form-check-label">
+                Men
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="sexo" value="Women" @onclick="() => GenderSelected('W')" />
+            <label class="form-check-label">
+                Women
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="sexo" value="Other" @onclick="() => GenderSelected('O')" />
+            <label class="form-check-label">
+                Other
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('N')" />
+            <label class="form-check-label">
+                Prefer not to say
+            </label>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Date of birth</label>
+            <input placeholder="Fecha de nacimiento"
+                   type="date"
+                   class="form-control inputs"
+                   id="BirthDate"
+                   @bind="@user_birth"/>
+        </div>
+        <div class="alert alert-danger alertas hidden" role="alert">
+            Select a date of birth
+        </div>
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile02" @bind="@url">
+                <label class="custom-file-label" for="inputGroupFile02">Upload a profile image</label>
+            </div>
+        </div>
+        <div class="cont-btn">
+            <button type="button" id="submit" class="btn btn-primary btn-crear" onclick="onFormSubmit()">Validate registration</button>
+            <button type="button" id="sendForm" class="btn btn-primary hidden" @onclick="AddUser">Create Account</button>
+        </div>
+    </form>
 
 @code {
     string user_email;
@@ -146,11 +153,15 @@
     string user_name;
     string user_last_name;
     char selected_gender;
+    string url;
+    private string imgUrl;
     DateTime user_birth;
+    private string message = "";
     public CreateAccount()
     {
         userController = new UserController();
     }
+
     private UserController userController;
 
     private void GenderSelected(char gender)
@@ -159,32 +170,45 @@
     }
     private void AddUser()
     {
+        const string titleSuccesAdded = "Thanks 😎";
+        const string messageSuccesAdded = "Your user was added successfully 😉";
+        const string acceptButton = "Ok";
+        const string declineButton = "No";
         Console.WriteLine("entra");
         try{
             User user = new User()
-        {
-            User_Email = user_email,
-            User_Password = user_password,
-            User_Name = user_name,
-            User_last_name = user_last_name,
-            User_Gender = selected_gender,
-            User_Birth = user_birth
+            {
+                User_Email = user_email,
+                User_Password = user_password,
+                User_Name = user_name,
+                User_last_name = user_last_name,
+                User_Gender = selected_gender,
+                User_Birth = user_birth,
+                User_Profile_Image = imgUrl
 
-        };
-            userController.CreateUser(user);
-        }
-        catch (InvalidOperationException e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-    }
+            };
+            if (userController.CreateUser(user))
+            {
+                DialogService.DisplayConfirm($"{titleSuccesAdded}", $"{messageSuccesAdded}", $"{acceptButton}", $"{declineButton}");
+            }
+            else
+            {
+                DialogService.DisplayConfirm("Oh no", $"Something go wrong", $"{acceptButton}", $"{declineButton}");
+            }
 
+            }
+            catch (InvalidOperationException e)
+            {
+            DialogService.DisplayConfirm("Oh no", $"{e}", $"{acceptButton}", $"{declineButton}");
+                Console.WriteLine(e.ToString());
+            }
+        }
+   
 }
 <script>
     function onFormSubmit(event) {
         const inputIds = ["Email", "Password", "UserName", "UserLastName"];
-        const regexPatterns = [/^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/,/^.*(?=.{8,120})(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\!\\#\$\%\^\&\*\(\)\-\=\¡\£\_\+\`\~\.\,\<\>\/\?\;\:\'\"\\\|\[\]\{\}]).*$/,/^[a-zA-Z]+$/,/^[a-zA-Z]+$/
-        ];
+        const regexPatterns = [/^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/, /^.*(?=.{8,120})(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\!\\#\$\%\^\&\*\(\)\-\=\¡\£\_\+\`\~\.\,\<\>\/\?\;\:\'\"\\\|\[\]\{\}]).*$/, /^[a-zA-Z]+$/, /^[a-zA-Z]+$/];
         const errorIds = ["emailError", "passwordError", "UserNameError", "UserLastNameError"];
         let hasError = false;
 
@@ -210,17 +234,7 @@
             document.getElementById("sendForm").classList.add("visible");
         }
     }
-
-
-
 </script>
 
-@* - 8-120 chars
-- no spaces
-- must contain at least one a-z char
-- must contain at least one A-Z char
-- must contain at least one digit
-- must contain at least one of the folowing chars:
-!@#$%^&*()-=¡£_+`~.,<>/?;:'"|[]{} *@
 
 
