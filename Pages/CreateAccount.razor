@@ -1,151 +1,184 @@
-﻿    @page "/createaccount"
-    @using System.Security;
-    @using System.Diagnostics;
-    @using _29MoneyCalculator.Clases;
-@using _29MoneyCalculator.Class.Interfaces;
-@using _29MoneyCalculator.Class;
-    @using _29MoneyCalculator.Controladores;
-    @using System;
-    @using Microsoft.Maui.Controls.Internals;
-    @using Microsoft.AspNetCore.Components.Routing;
-    @inject IDialogService DialogService;
-    <style>
-        h1
-        {
-            text-align: center;
-            font-size: 30px;
-        }
+﻿        @page "/createaccount"
+        @using System.Security;
+        @using System.Diagnostics;
+@using Newtonsoft.Json;
+        @using _29MoneyCalculator.Clases;
+    @using _29MoneyCalculator.Class.Interfaces;
+    @using _29MoneyCalculator.Class;
+        @using _29MoneyCalculator.Controladores;
+        @using System;
+        @using Microsoft.Maui.Controls.Internals;
+        @using Microsoft.AspNetCore.Components.Routing;
+        @inject IDialogService DialogService;
+        <style>
+            h1
+            {
+                text-align: center;
+                font-size: 30px;
+            }
 
-        .btn-crear
-        {
-            background-color: #00913f;
+            .btn-validate
+            {
+                background-color: #00913f;
+            }
+
+        .btn-validate:hover {
+            background-color: #00909f;
+            border-radius: 20px;
         }
-        .cont-btn
-        {
-            text-align:center;
-            margin-top:30px;
-        }
-        .inputs
-        {
-            border: solid 3px #dec783;
-            border-radius:20px;
+            .btn-hidden
+            {
+             background-color: #00913f;
+            margin-top:20px;
+            }
+
+    .btn-hidden:hover {
+        background-color: #00909f;
+        border-radius: 20px;
+    }
+
+    .cont-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        justify-content: center; 
+        text-align: center;
+        width: 300px;
+        margin: 0 auto;
+    }
+
+            
+            .inputs
+            {
+                border: solid 3px #dec783;
+                border-radius:20px;
         
-        }
-        .alertas
-        {
-            font-family:'Lucida Sans',
-            'Lucida Sans Regular',
-            'Lucida Grande',
-            'Lucida Sans Unicode',
-            Geneva, Verdana, sans-serif;
-            border-radius:20px;
-            background-color: #ff0000;
-            color:#ffff;
-        }
-        .hidden
-        {
-            display:none;
-        }
-        .visible
-        {
-            display:block;
-        }
-    </style>
-    <h1>Create your new account</h1>
+            }
+            .alertas
+            {
+                font-family:'Lucida Sans',
+                'Lucida Sans Regular',
+                'Lucida Grande',
+                'Lucida Sans Unicode',
+                Geneva, Verdana, sans-serif;
+                border-radius:20px;
+                background-color: #ff0000;
+                color:#ffff;
+            }
+            .hidden
+            {
+                display:none;
+            
+            }
+            .visible
+            {
+                display:block;
+            }
+            .btn-back
+            {
+                border-radius:20px;
+                border-color:transparent;
+        background: #001a57;
+            }
 
-    <form id="form" >
-        <div class="mb-3">
-            <label for="Email" class="form-label">Email address</label>
-            <input placeholder="Email"
-                   type="email"
-                   @bind="@user_email"
-                   class="form-control inputs"
-                   id="Email"
-                   aria-describedby="emailHelp" />
-        </div>
-        <div class="alert alert-danger alertas hidden" role="alert" id="emailError">
-            The email address is incorrect. 😣
-        </div>
-        <div class="form-group">
-            <label for="Password">Password</label>
-            <div class="input-group">
-                <input type="password" 
-                    @bind="@user_password"
-                    id="Password" 
-                    class="form-control inputs" 
-                    placeholder="Password">
-                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </button>
+         .btn-back:hover {
+            background: #1ea9fc;
+            border-radius: 40px;
+            transition: 2s ease all;
+         }
+        </style>
+        <a class="btn btn-primary btn-back" href="/index" role="button">Go back</a>
+        <h1>Create your new account</h1>
+
+        <form id="form" >
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email address</label>
+                <input placeholder="Email"
+                       type="email"
+                       @bind="@user_email"
+                       class="form-control inputs"
+                       id="Email"
+                       aria-describedby="emailHelp" />
             </div>
-        </div>
-        <div class="alert alert-danger alertas hidden" style="margin-top:10px;" role="alert" id="passwordError">
-            The password format
-            8-120 chars,no spaces,must contain at least one a-z char,must contain at least one A-Z char,must contain at least one digit,must contain at least one of the folowing chars:
-            !$%^&*()-=¡£_+`~./?;:'"|[]{}. 😣
-        </div>
-        <div class="input-group mb-3" style="margin-top:20px;">
-            <div class="input-group-prepend">
-                <span class="input-group-text" style="height:50px;">29</span>
+            <div class="alert alert-danger alertas hidden" role="alert" id="emailError">
+                The email address is incorrect. 😣
             </div>
-            <input type="text" id="UserName" class="form-control inputs" placeholder="User name" @bind="@user_name" min="4">
-        </div>
-        <div class="alert alert-danger alertas hidden" role="alert" id="UserNameError">
-            The user's name must have a minimum of 4 characters and should not contain numbers, hyphens,spaces, or special characters. 😣
-        </div>
-        <div class="input-group mb-3" style="margin-top:20px;">
-            <input type="text" id="UserLastName"
-                   class="form-control inputs" placeholder="User last name" @bind="@user_last_name" min="4">
-        </div>
-        <div class="alert alert-danger alertas hidden" role="alert" id="UserLastNameError">
-        The user's last name must have a minimum of 4 characters and should not contain numbers, hyphens,spaces, or special characters. 😣
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('M')" />
-            <label class="form-check-label">
-                Men
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="sexo" value="Women" @onclick="() => GenderSelected('W')" />
-            <label class="form-check-label">
-                Women
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="sexo" value="Other" @onclick="() => GenderSelected('O')" />
-            <label class="form-check-label">
-                Other
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('N')" />
-            <label class="form-check-label">
-                Prefer not to say
-            </label>
-        </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Date of birth</label>
-            <input placeholder="Fecha de nacimiento"
-                   type="date"
-                   class="form-control inputs"
-                   id="BirthDate"
-                   @bind="@user_birth"/>
-        </div>
-        <div class="alert alert-danger alertas hidden" role="alert">
-            Select a date of birth
-        </div>
-        <div class="input-group mb-3">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile02" @bind="@url">
-                <label class="custom-file-label" for="inputGroupFile02">Upload a profile image</label>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <div class="input-group">
+                    <input type="password" 
+                        @bind="@user_password"
+                        id="Password" 
+                        class="form-control inputs" 
+                        placeholder="Password">
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
             </div>
+            <div class="alert alert-danger alertas hidden" style="margin-top:10px;" role="alert" id="passwordError">
+                The password format
+                8-120 chars,no spaces,must contain at least one a-z char,must contain at least one A-Z char,must contain at least one digit,must contain at least one of the folowing chars:
+                !$%^&*()-=¡£_+`~./?;:'"|[]{}. 😣
+            </div>
+            <div class="input-group mb-3" style="margin-top:20px;">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="height:50px;">29</span>
+                </div>
+                <input type="text" id="UserName" class="form-control inputs" placeholder="User name" @bind="@user_name" min="4">
+            </div>
+            <div class="alert alert-danger alertas hidden" role="alert" id="UserNameError">
+                The user's name must have a minimum of 4 characters and should not contain numbers, hyphens,spaces, or special characters. 😣
+            </div>
+            <div class="input-group mb-3" style="margin-top:20px;">
+                <input type="text" id="UserLastName"
+                       class="form-control inputs" placeholder="User last name" @bind="@user_last_name" min="4">
+            </div>
+            <div class="alert alert-danger alertas hidden" role="alert" id="UserLastNameError">
+            The user's last name must have a minimum of 4 characters and should not contain numbers, hyphens,spaces, or special characters. 😣
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('M')" />
+                <label class="form-check-label">
+                    Men
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sexo" value="Women" @onclick="() => GenderSelected('W')" />
+                <label class="form-check-label">
+                    Women
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sexo" value="Other" @onclick="() => GenderSelected('O')" />
+                <label class="form-check-label">
+                    Other
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="sexo" @onclick="() => GenderSelected('N')" />
+                <label class="form-check-label">
+                    Prefer not to say
+                </label>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Date of birth</label>
+                <input placeholder="Fecha de nacimiento"
+                       type="date"
+                       class="form-control inputs"
+                       id="BirthDate"
+                       @bind="@user_birth"/>
+            </div>
+            <div class="alert alert-danger alertas hidden" role="alert">
+                Select a date of birth
+            </div>
+          <div class="input-group mb-3">
         </div>
-        <div class="cont-btn">
-            <button type="button" id="submit" class="btn btn-primary btn-crear" onclick="onFormSubmit()">Validate registration</button>
-            <button type="button" id="sendForm" class="btn btn-primary hidden" @onclick="AddUser">Create Account</button>
-        </div>
-    </form>
+            <div class="cont-btn">
+                <button type="button" id="submit" class="btn btn-primary btn-validate" onclick="onFormSubmit()">Validate registration</button>
+                <button type="button" id="sendForm" class="btn btn-primary btn-hidden hidden" @onclick="AddUser">Create Account</button>
+            </div>
+        </form>
 
 @code {
     string user_email;
@@ -154,7 +187,6 @@
     string user_last_name;
     char selected_gender;
     string url;
-    private string imgUrl;
     DateTime user_birth;
     private string message = "";
     public CreateAccount()
@@ -168,73 +200,75 @@
     {
         selected_gender = gender;
     }
+
+    
     private void AddUser()
-    {
-        const string titleSuccesAdded = "Thanks 😎";
-        const string messageSuccesAdded = "Your user was added successfully 😉";
-        const string acceptButton = "Ok";
-        const string declineButton = "No";
-        Console.WriteLine("entra");
-        try{
-            User user = new User()
-            {
-                User_Email = user_email,
-                User_Password = user_password,
-                User_Name = user_name,
-                User_last_name = user_last_name,
-                User_Gender = selected_gender,
-                User_Birth = user_birth,
-                User_Profile_Image = imgUrl
+        {
+            const string titleSuccesAdded = "Thanks 😎";
+            const string messageSuccesAdded = "Your user was added successfully 😉";
+            const string acceptButton = "Ok";
+            const string declineButton = "No";
+            Console.WriteLine("entra");
+            try{
+                User user = new User()
+                {
+                    User_Email = user_email,
+                    User_Password = user_password,
+                    User_Name = user_name,
+                    User_last_name = user_last_name,
+                    User_Gender = selected_gender,
+                    User_Birth = user_birth,
+                };
+                if (userController.CreateUser(user))
+                {
+                    DialogService.DisplayConfirm($"{titleSuccesAdded}", $"{messageSuccesAdded}", $"{acceptButton}", $"{declineButton}");
 
-            };
-            if (userController.CreateUser(user))
-            {
-                DialogService.DisplayConfirm($"{titleSuccesAdded}", $"{messageSuccesAdded}", $"{acceptButton}", $"{declineButton}");
-            }
-            else
-            {
-                DialogService.DisplayConfirm("Oh no", $"Something go wrong", $"{acceptButton}", $"{declineButton}");
-            }
+                }
+                else
+                {
+                    DialogService.DisplayConfirm("Oh no", $"Something go wrong", $"{acceptButton}", $"{declineButton}");
 
+                }
+
+                }
+                catch (InvalidOperationException e)
+                {
+                DialogService.DisplayConfirm("Oh no", $"{e}", $"{acceptButton}", $"{declineButton}");
+                    Console.WriteLine(e.ToString());
             }
-            catch (InvalidOperationException e)
-            {
-            DialogService.DisplayConfirm("Oh no", $"{e}", $"{acceptButton}", $"{declineButton}");
-                Console.WriteLine(e.ToString());
             }
-        }
    
-}
-<script>
-    function onFormSubmit(event) {
-        const inputIds = ["Email", "Password", "UserName", "UserLastName"];
-        const regexPatterns = [/^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/, /^.*(?=.{8,120})(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\!\\#\$\%\^\&\*\(\)\-\=\¡\£\_\+\`\~\.\,\<\>\/\?\;\:\'\"\\\|\[\]\{\}]).*$/, /^[a-zA-Z]+$/, /^[a-zA-Z]+$/];
-        const errorIds = ["emailError", "passwordError", "UserNameError", "UserLastNameError"];
-        let hasError = false;
+    }
+    <script>
+        function onFormSubmit(event) {
+            const inputIds = ["Email", "Password", "UserName", "UserLastName"];
+            const regexPatterns = [/^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/, /^.*(?=.{8,120})(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\!\\#\$\%\^\&\*\(\)\-\=\¡\£\_\+\`\~\.\,\<\>\/\?\;\:\'\"\\\|\[\]\{\}]).*$/, /^[a-zA-Z]+$/, /^[a-zA-Z]+$/];
+            const errorIds = ["emailError", "passwordError", "UserNameError", "UserLastNameError"];
+            let hasError = false;
 
-        for (let i = 0; i < inputIds.length; i++) {
-            const inputId = inputIds[i];
-            const regexPattern = regexPatterns[i];
-            const errorId = errorIds[i];
+            for (let i = 0; i < inputIds.length; i++) {
+                const inputId = inputIds[i];
+                const regexPattern = regexPatterns[i];
+                const errorId = errorIds[i];
 
-            const inputValue = document.getElementById(inputId).value.trim();
+                const inputValue = document.getElementById(inputId).value.trim();
 
-            if (!regexPattern.test(inputValue)) {
-                document.getElementById(errorId).classList.remove("hidden");
-                document.getElementById(errorId).classList.add("visible");
-                hasError = true;
-            } else {
-                document.getElementById(errorId).classList.remove("visible");
-                document.getElementById(errorId).classList.add("hidden");
+                if (!regexPattern.test(inputValue)) {
+                    document.getElementById(errorId).classList.remove("hidden");
+                    document.getElementById(errorId).classList.add("visible");
+                    hasError = true;
+                } else {
+                    document.getElementById(errorId).classList.remove("visible");
+                    document.getElementById(errorId).classList.add("hidden");
+                }
+            }
+
+            if (!hasError) {
+                document.getElementById("sendForm").classList.remove("hidden");
+                document.getElementById("sendForm").classList.add("visible");
             }
         }
-
-        if (!hasError) {
-            document.getElementById("sendForm").classList.remove("hidden");
-            document.getElementById("sendForm").classList.add("visible");
-        }
-    }
-</script>
+    </script>
 
 
 

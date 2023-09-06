@@ -16,6 +16,5 @@ namespace _29MoneyCalculator.Clases
         public string User_Password { get; set; }
         public char User_Gender { get; set; }
         public DateTime User_Birth { get; set; }
-        public string User_Profile_Image { get; set; }
     }
 }

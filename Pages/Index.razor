@@ -1,4 +1,10 @@
 ﻿@page "/"
+@using _29MoneyCalculator.Class.Interfaces;
+@using _29MoneyCalculator.Class;
+@using _29MoneyCalculator.Controladores;
+@using _29MoneyCalculator.Modelos;
+@inject IDialogService DialogService
+
 <style>
     body
     {
@@ -53,6 +59,14 @@
 
 
 @code {
+    string email;
+    string password;
+    private UserController userController;
+
+    public Index()
+    {
+        userController = new UserController();
+    }
     private string GetDate()
     {
         DateTime date = DateTime.Now;
@@ -66,6 +80,22 @@
         string fullDate = $"{day}/{month}/{year}";
         return fullDate;
     }
+    private void ValidateUser()
+    {
+        const string title = "Successful login.😁";
+        const string message = $"Hello ";
+        const string acceptBtn = "OK";
+        const string closeBtn = "Close";
+        var result = userController.UserInformation(email);
+        if (userController.ValidateUser(email, password))
+        {
+            Session.Login(result.Item1, result.Item2);
+            DialogService.DisplayConfirm($"{title}", $"{message} {Session.User_Name}", $"{acceptBtn}", $"{closeBtn}");
+        } else
+        {
+            DialogService.DisplayConfirm("ERROR","Check your credentials and try again",$"{acceptBtn}",$"{closeBtn}");
+        }
+    }
 }
 <p>@GetDate()</p>
 <h1>Welcome!</h1>
@@ -78,12 +108,17 @@
                class="form-control inputs"
                id="exampleInputEmail1"
                placeholder="Email address"
-               aria-describedby="emailHelp" />
+               aria-describedby="emailHelp"
+               @bind="email"/>
     </div>
         <div class="form-group">
             <label for="password">Password</label>
             <div class="input-group">
-                <input type="password" id="password" class="form-control inputs" placeholder="Enter your password">
+                <input type="password" 
+                    id="password" 
+                    class="form-control inputs" 
+                    placeholder="Enter your password" 
+                    @bind="password">
                 <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </button>
@@ -96,7 +131,7 @@
     <div class="enlaces">
         <a href="/createaccount">Not account? Create one here</a>
     </div>
-    <button type="submit" class="btnLogin">Login</button>
+        <button type="button" class="btnLogin" @onclick="ValidateUser">Login</button>
 </form>
 </div>
 <script>

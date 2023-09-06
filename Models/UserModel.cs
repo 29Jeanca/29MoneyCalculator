@@ -22,7 +22,7 @@ namespace _29MoneyCalculator.Modelos
             List<int> cantAgg = new();
             try { 
             NpgsqlConnection conexion = conxBD.Connect();
-            string sentencia = "INSERT INTO users(user_name,user_last_name,user_email,user_password,user_gender,user_birth,user_profile_image)VALUES(@name,@lastname,@email,@password,@gender,@birth,@image)";
+            string sentencia = "INSERT INTO users(user_name,user_last_name,user_email,user_password,user_gender,user_birth)VALUES(@name,@lastname,@email,@password,@gender,@birth)";
             NpgsqlCommand comando = new NpgsqlCommand(sentencia, conexion);
             comando.Parameters.AddWithValue("@name", user.User_Name);
             comando.Parameters.AddWithValue("@lastname", user.User_last_name);
@@ -30,7 +30,6 @@ namespace _29MoneyCalculator.Modelos
             comando.Parameters.AddWithValue("@password", user.User_Password);
             comando.Parameters.AddWithValue("@gender", user.User_Gender);
             comando.Parameters.AddWithValue("@birth", user.User_Birth);
-            comando.Parameters.AddWithValue("@image", user.User_Profile_Image);
                 int rowsAffected = comando.ExecuteNonQuery();
                 cantAgg.Add(rowsAffected);
                 Console.WriteLine($"{rowsAffected} row(s) inserted successfully.");
@@ -50,6 +49,46 @@ namespace _29MoneyCalculator.Modelos
                 Console.WriteLine($"Excepción PostgreSQL: {ex.Message}");
                 return false;
                 
+            }
+        }
+        public bool ValidateUser(string email,string password)
+        {
+            NpgsqlConnection connection = conxBD.Connect();
+            string query = "SELECT user_email,user_password FROM users WHERE user_email=@email AND user_password=@password";
+            NpgsqlCommand command = new (query, connection);
+            command.Parameters.AddWithValue("@email", email);
+            command.Parameters.AddWithValue("@password", password);
+            NpgsqlDataReader reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                conxBD.Disconnect();
+                return true;
+            }
+            else
+            {
+                conxBD.Disconnect();
+                return false;
+            }
+        }
+        public (int,string) UserInformation(string email)
+        {
+            NpgsqlConnection connection = conxBD.Connect();
+            string query = "SELECT user_id,user_name || ' '|| user_last_name FROM users WHERE user_email=@email";
+            NpgsqlCommand command = new(query, connection);
+            command.Parameters.AddWithValue("@email", email);
+            NpgsqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string user_full_name = reader.GetString(1);
+                conxBD.Disconnect();
+                return (id, user_full_name);
+            }
+            else
+            {
+                conxBD.Disconnect();
+                return(-1,null);
             }
         }
        

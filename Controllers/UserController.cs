@@ -21,5 +21,13 @@ namespace _29MoneyCalculator.Controladores
         {
            return userModel.CreateUser(user);
         }
+        public bool ValidateUser(string email, string password)
+        {
+            return userModel.ValidateUser(email, password);
+        }
+        public (int, string) UserInformation(string email)
+        {
+            return userModel.UserInformation(email);
+        }
     }
 }
