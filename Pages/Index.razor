@@ -4,7 +4,7 @@
 @using _29MoneyCalculator.Controladores;
 @using _29MoneyCalculator.Modelos;
 @inject IDialogService DialogService
-
+@inject NavigationManager NavigationManager
 <style>
     body
     {
@@ -91,6 +91,7 @@
         {
             Session.Login(result.Item1, result.Item2);
             DialogService.DisplayConfirm($"{title}", $"{message} {Session.User_Name}", $"{acceptBtn}", $"{closeBtn}");
+            NavigationManager.NavigateTo("/startpage");
         } else
         {
             DialogService.DisplayConfirm("ERROR","Check your credentials and try again",$"{acceptBtn}",$"{closeBtn}");

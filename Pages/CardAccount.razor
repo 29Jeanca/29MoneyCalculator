@@ -1,0 +1,30 @@
+﻿@page "/cardaccount"
+
+<div class="card" style="width: 18rem; background-color:#dec783">
+    <img class="card-img-top" src="https://i.imgur.com/uavWBCI.png" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">@TitleCard</h5>
+        <p class="card-text">@DescriptionCard</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Earnings: @Earnings</li>
+        <li class="list-group-item">Taxes: @Taxes</li>
+        <li class="list-group-item">Bills: @Bills</li>
+        <li class="list-group-item">Leisure: @Leisure</li>
+    </ul>
+    <div class="card-body">
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public string TitleCard { get; set; }
+    [Parameter] public string DescriptionCard { get; set; }
+    [Parameter] public decimal Earnings { get; set; }
+    [Parameter] public decimal Taxes { get; set; }
+    [Parameter] public decimal Bills { get; set; }
+    [Parameter] public decimal Leisure { get; set; }
+}
