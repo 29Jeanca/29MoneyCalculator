@@ -1,5 +1,6 @@
-﻿@page "/startpage"
+﻿ @page "/startpage"
 @using _29MoneyCalculator.Class;
+@using _29MoneyCalculator.Models;
 <style>
     body {
         margin: 0;
@@ -35,6 +36,13 @@
     .btn-add-account {
         border-radius: 20px;
     }
+    .card-container {
+        display: flex; /* Utiliza flexbox para alinear los elementos horizontalmente */
+        flex-wrap: wrap; /* Permite que las tarjetas se envuelvan a la siguiente línea si no caben en el ancho del contenedor */
+        justify-content: center; /* Distribuye las tarjetas horizontalmente con espaciado entre ellas */
+        column-gap:20px;
+        margin-top:5px;
+    }   
 
 </style>
 <body>
@@ -56,31 +64,47 @@
             </p>
         </div>
 
-        <CardAccount></CardAccount>
 
+        <div class="card-container">
+            @foreach (var account in userAccounts)
+            {
+                <CardAccount TitleCard="@account.TitleAccount"
+                             DescriptionCard="@account.DescriptionAccount"
+                             Earnings="@account.Earnings"
+                             Taxes="@account.Taxes"
+                             Bills="@account.Bills"
+                             Leisure="@account.Leisure" />
+            }
+        </div>
         <button type="button" class="btn btn-dark btn-add-account">Add a new account</button>
 
     </main>
 
+
+    <div class="card text-center" style="background-color:#0a0b0c; color:#fff;" >
+        <div class="card-body">
+            <h5 class="card-title">This application was made by Jeancarlos Barberena.</h5>
+            <a href="https://github.com/29Jeanca"> <img src="https://i.imgur.com/wyhYV75.png" alt="Github account" /></a>
+        </div>
+        <div class="card-footer text-muted">
+            @userName
+        </div>
+    </div>
 </body>
 @code {
     string userName = Session.User_Name;
     int userId = Session.User_ID;
-    // private AccountModel accountModel;
-    // public StartPage()
-    // {
-    //     accountModel = new AccountModel();
-    // }
-    // string title;
-    // string description;
-    // decimal earnings;
-    // decimal taxes;
-    // decimal bills;
-    // decimal leisure;
-
-    // private void ShowAccounts()
-    // {
-    //     accountModel.ShowAccounts(userId,title,description,earnings,taxes,bills,leisure);
-    // }
+    string mensaje;
+    private AccountModel accountModel;
+    List<Account> userAccounts = new List<Account>();
+    public StartPage()
+    {
+        accountModel = new AccountModel();
+    }
+    protected override void OnInitialized()
+    {
+        userAccounts = accountModel.GetAccounts(userId);
+    }
 
 }
+ 
