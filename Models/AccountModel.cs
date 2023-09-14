@@ -42,5 +42,33 @@ namespace _29MoneyCalculator.Models
             conxDB.Disconnect();
             return accounts;
         }
+        public void AddAccount(int user_id,Account account)
+        {
+            NpgsqlConnection connection = conxDB.Connect();
+            string query = "INSERT INTO accounts(title_account,description_account,earnings,taxes,bills,leisure,user_id) VALUES(@title,@description,@earnings,@taxes,@bills,@leisure,@user_id)";
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command.Parameters.AddWithValue("@title", account.TitleAccount);
+            command.Parameters.AddWithValue("@description", account.DescriptionAccount);
+            command.Parameters.AddWithValue("@earnings", account.Earnings);
+            command.Parameters.AddWithValue("@taxes", account.Taxes);
+            command.Parameters.AddWithValue("@bills", account.Bills);
+            command.Parameters.AddWithValue("@leisure", account.Leisure);
+            command.Parameters.AddWithValue("@user_id", user_id);
+            NpgsqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                _ = new Account()
+                {
+                    TitleAccount = reader.GetString(0),
+                    DescriptionAccount = reader.GetString(1),
+                    Earnings = reader.GetDecimal(2),
+                    Taxes = reader.GetDecimal(3),
+                    Bills = reader.GetDecimal(4),
+                    Leisure = reader.GetDecimal(5),
+                    User_ID = user_id
+                };
+            }
+            conxDB.Disconnect();
+        }
     }
 }

@@ -1,0 +1,102 @@
+﻿@page "/addbankaccount"
+@using _29MoneyCalculator.Class;
+@using _29MoneyCalculator.Class.Interfaces;
+@using _29MoneyCalculator.Controllers;
+@inject IDialogService DialogService
+<style>
+    .btn-back {
+        border-radius: 20px;
+        border-color: transparent;
+        background: #001a57;
+    }
+</style>
+<a class="btn btn-primary btn-back" href="/startpage" role="button">Go back</a>
+<form>
+    <div class="form-group">
+        <label for="title">Title account</label>
+        <input type="text" 
+        class="form-control"
+        id="title"
+        placeholder="Title account"
+        @bind=title>
+    </div>
+    <div class="form-group">
+        <label for="description">Description account</label>
+        <input type="text" 
+         class="form-control" 
+         id="description" 
+         placeholder="Description"
+         @bind=description>
+    </div>
+    <div class="form-group">
+        <label for="earnings">Earnings</label>
+        <input type="text" 
+         class="form-control"
+         id="earnings" 
+         placeholder="Earnings"
+         @bind=earnings>
+    </div>
+    <div class="form-group">
+        <label for="taxes">Taxes</label>
+        <input type="text"
+         class="form-control"
+         id="taxes"
+         placeholder="Taxes"
+         @bind=taxes>
+    </div>
+    <div class="form-group">
+        <label for="bills">Bills</label>
+        <input type="text"
+         class="form-control"
+         id="bills"
+         placeholder="Bills"
+         @bind=bills>
+    </div>
+    <div class="form-group">
+        <label for="leisure">Leisure</label>
+        <input type="text"
+         class="form-control"
+         id="leisure"
+         placeholder="Leisure"
+         @bind=leisure>
+    </div>
+    <button type="button" class="btn btn-primary" @onclick="AddAccount">Add account</button>
+</form>
+@code {
+    int user_id = Session.User_ID;
+    string title;
+    string description;
+    decimal earnings;
+    decimal taxes;
+    decimal bills;
+    decimal leisure;
+    List<Account> accounts = new();
+    AccountController accountController;
+    public AddBankAccount()
+    {
+        accountController = new AccountController();
+    }
+    private void AddAccount()
+    {
+        Account account = new()
+        {
+            TitleAccount = title,
+            DescriptionAccount = description,
+            Earnings = earnings,
+            Taxes = taxes,
+            Bills = bills,
+            Leisure = leisure
+        };
+        accounts.Add(account);
+        accountController.AddAccount(user_id,account);
+        if(accounts.Count>=1)
+        {
+            DialogService.DisplayConfirm("Success", "The account was added", "Ok", "Back");
+        }
+        else
+        {
+            DialogService.DisplayConfirm("ERROR", "The account NOT was added", "Ok", "Back");
+
+        }
+    }
+}
